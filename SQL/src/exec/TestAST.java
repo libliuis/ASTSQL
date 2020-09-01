@@ -23,6 +23,34 @@ public class TestAST {
 	}
 	
 	@Test
+	public void testBigger() {
+		AST asTtree = new AST();
+		asTtree.parse("companyName > HTSC");
+		assertEquals("Select * from table where companyName > 'HTSC'", asTtree.getSQL());
+	}
+	
+	@Test
+	public void testSmaller() {
+		AST asTtree = new AST();
+		asTtree.parse("companyName < HTSC");
+		assertEquals("Select * from table where companyName < 'HTSC'", asTtree.getSQL());
+	}
+	
+	@Test
+	public void testsinglequote() {
+		AST asTtree = new AST();
+		asTtree.parse("()");
+		assertEquals("", asTtree.getSQL());
+	}
+	
+	@Test
+	public void testdoublequote() {
+		AST asTtree = new AST();
+		asTtree.parse("(())");
+		assertEquals("", asTtree.getSQL());
+	}
+	
+	@Test
 	public void testquote() {
 		AST asTtree = new AST();
 		asTtree.parse("(companyName <> HTSC)");
@@ -48,6 +76,13 @@ public class TestAST {
 		AST asTtree = new AST();
 		asTtree.parse("( companyName <> HTSC )  OR  ( ( age == 30 ) AND ( sex <> 'Male' ) )");
 		assertEquals("Select * from table where (companyName <> 'HTSC' OR (age = '30' AND sex <> 'Male'))", asTtree.getSQL());
+	}
+	
+	@Test
+	public void testcomplex() {
+		AST asTtree = new AST();
+		asTtree.parse("( companyName <> HTSC )  OR  ( ( age > 30 ) AND ( sex <> 'Male' ) )");
+		assertEquals("Select * from table where (companyName <> 'HTSC' OR (age > '30' AND sex <> 'Male'))", asTtree.getSQL());
 	}
 
 }

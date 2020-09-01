@@ -11,6 +11,4 @@ public class EqualNode extends ASTNode{
 	public String getSQL() {
 		return this.a.getSQL() + " = '" + this.b.getSQL() + "'";
 	}
-	
-	
 }

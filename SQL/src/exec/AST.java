@@ -26,6 +26,26 @@ public class AST {
 				gtstack(inequalNode);
 			}
 		}
+		else if(SA.peek().getSQL()=="<") {
+			SA.pop();
+			SmallerNode smallerNode = new SmallerNode(SA.pop(), new NameNode(tmp));
+			if(SA.isEmpty()) {
+				SA.push(smallerNode);
+			}
+			else {
+				gtstack(smallerNode);
+			}
+		}
+		else if(SA.peek().getSQL()==">") {
+			SA.pop();
+			BiggerNode biggerNode = new BiggerNode(SA.pop(), new NameNode(tmp));
+			if(SA.isEmpty()) {
+				SA.push(biggerNode);
+			}
+			else {
+				gtstack(biggerNode);
+			}
+		}
 		else {
 			SA.push(new NameNode(tmp));
 		}
@@ -76,8 +96,17 @@ public class AST {
 				SA.push(new NameNode("<>"));
 				continue;
 			}
+			if(word.charAt(i)=='<') {
+				SA.push(new NameNode("<"));
+				continue;
+			}
+			if(word.charAt(i)=='>') {
+				SA.push(new NameNode(">"));
+				continue;
+			}
 			if(word.charAt(i)==')') {
 				ASTNode astNode = SA.pop();
+				if(SA.isEmpty())return;
 				SA.pop();
 				gtstack(astNode);
 			}
@@ -119,6 +148,7 @@ public class AST {
 	}
 
 	public String getSQL() {
+		if(SA.isEmpty())return "";
 		return "Select * from table where " + SA.peek().getSQL();
 	}
 }
